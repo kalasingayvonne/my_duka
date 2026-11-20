@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Homepage {% endblock %}
+{% block content %}
+
+<div>
+    <p>My sales page</p>
+    <div>
+        <form method="POST" action="/sales">
+            <select name="pid" class="form-select mb-2" required>
+                {% for p in products_data %}
+                <option value="{{ p[0] }}">{{ p[1] }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="quantity" class="form-control mb-2" placeholder="Quantity" min="1" required>
+            <button type="submit" class="btn btn-primary">Record sale</button>
+        </form>
+
+
+
+    </div>
+
+    <div>
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th>Sale ID</th>
+                    <th>Product Name</th>
+                    <th>Buying Price</th>
+                    <th>Selling Price</th>
+
+                </tr>
+            </thead>
+            <tbody>
+                {% for sales in sales_data %}
+                <tr>
+                    <td>{{ sales[0] }}</td>
+                    <td>{{ sales[1] }}</td>
+                    <td>{{ sales[2] }}</td>
+                    <td>{{ sales[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+
+
+</div>
+{% endblock %}

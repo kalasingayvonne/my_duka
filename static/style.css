@@ -1,0 +1,52 @@
+:root {
+    --brand: #2563eb;        /* main blue */
+    --brand-dark: #1d4ed8;   /* darker blue for hover/gradient */
+    --accent: #f97316;       /* orange accent for buttons/highlights */
+    --accent-dark: #ea580c;
+    --bg: #f4f7fb;
+}
+
+body {
+    background: var(--bg);
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+main { flex: 1; }
+
+.navbar {
+    background: linear-gradient(90deg, var(--brand-dark), var(--brand));
+}
+.navbar-brand { font-weight: 600; letter-spacing: 1px; }
+.navbar .nav-link {
+    color: #fff;
+    font-weight: 500;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+}
+.navbar .nav-link:hover { background: rgba(255, 255, 255, 0.2); }
+
+/* buttons use the orange accent to stand out against the blue navbar/theme */
+.btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+}
+.btn-primary:hover {
+    background: var(--accent-dark);
+    border-color: var(--accent-dark);
+}
+
+/* tables use the blue brand color */
+table.dataTable thead th {
+    background: var(--brand);
+    color: #fff;
+    text-align: left !important;
+}
+table.dataTable td { text-align: left !important; }
+
+.page-title {
+    color: var(--brand-dark);
+    font-weight: 600;
+}

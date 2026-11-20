@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}MyDuka{% endblock %}</title>
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/css/bootstrap.min.css">
+    <!-- datatables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/3.1.5/css/dataTables.dataTables.min.css">
+    <script src="https://cdn.datatables.net/3.1.5/js/dataTables.min.js"></script>
+
+    <!-- font -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+    <!-- your own CSS, always LAST so it overrides the others -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+
+<body>
+
+    <!-- navbar is OUTSIDE the container so it spans the full width -->
+    <nav class="navbar navbar-expand-lg shadow" data-bs-theme="dark">
+        <div class="container-fluid px-4">
+            <a class="navbar-brand" href="/">MyDuka</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+                <ul class="navbar-nav flex-lg-fill mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/register">Register</a></li>
+                </ul>
+
+                <ul class="navbar-nav mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/dashboard">Dashboard</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/products">Products</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/stock">Stock</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/sales">Sales</a></li>
+                </ul>
+
+                <ul class="navbar-nav flex-lg-fill justify-content-lg-end mb-2 mb-lg-0">
+                    <li class="nav-item"><a class="nav-link" href="/logout">Logout</a></li>
+                    <li class="nav-item"><a class="nav-link" href="/login">Login</a></li>
+                </ul>
+
+            </div>
+        </div>
+    </nav>
+
+    <main class="container py-4">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <footer class="text-center text-muted py-3">
+        © 2026 MyDuka
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.9/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // only start DataTables on pages that actually have the table
+        if (document.querySelector('#example')) {
+            new DataTable('#example');
+        }
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Homepage {% endblock %}
+{% block content %}
+
+<div>
+    <p>My stock page</p>
+    <div>
+        <form method="POST" action="/stock" class="mb-4">
+            <select name="pid" class="form-select mb-2" required>
+                {% for p in products_data %}
+                <option value="{{ p[0] }}">{{ p[1] }}</option>
+                {% endfor %}
+            </select>
+            <input type="number" name="stock_quantity" class="form-control mb-2" placeholder="Quantity to add" min="1"
+                required>
+            <button type="submit" class="btn btn-primary">Add stock</button>
+        </form>
+
+        <table id="example" class="display">
+            <thead>
+                <tr>
+                    <th>Stock ID</th>
+                    <th>Product Name</th>
+                    <th>Quantity Added</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in stock_data %}
+                <tr>
+                    <td>{{ item[0] }}</td>
+                    <td>{{ item[1] }}</td>
+                    <td>{{ item[2] }}</td>
+                    <td>{{ item[3] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+
+
+
+
+    </div>
+
+
+
+</div>
+{% endblock %}
