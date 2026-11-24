@@ -1,15 +1,20 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session,flash
 from database import (
     get_products, insert_products,
     fetch_sales, insert_sales,
     fetch_stock, insert_stock,
     get_sales_per_product, get_profit_per_product,
-    get_profit_per_day, get_sales_per_day
+    get_profit_per_day, get_sales_per_day,
+    insert_user,check_user_exists,
+  
 )
-
+from flask_bcrypt import  Bcrypt
 # flask instance
 app = Flask(__name__)
-app.secret_key = 'change-this-to-any-long-random-text'  # needed for session to work
+
+
+bcrypt = Bcrypt(app)
+app.secret_key = '00emnd03ii09fj300wjdj92djjffkfkkffg' # needed for session to work
 
 
 @app.route('/')  # decorator func
@@ -58,17 +63,26 @@ def stock():
 
 @app.route('/dashboard')
 def dashboard():
-    sales_per_product = get_sales_per_product()
-    profit_per_product = get_profit_per_product()
-    profit_per_day = get_profit_per_day()
-    sales_per_day = get_sales_per_day()
-    return render_template(
-        'dashboard.html',
-        sales_per_product=sales_per_product,
-        profit_per_product=profit_per_product,
-        profit_per_day=profit_per_day,
-        sales_per_day=sales_per_day
-    )
+    product_sales = get_sales_per_product()
+    daily_sales = get_sales_per_day()
+
+    product_profit = get_profit_per_product()
+    daily_profit = get_profit_per_day()
+
+    product_names = [i[0] for i in product_sales]
+    sales_p = [ float(i[1]) for i in product_sales]
+    profit_p = [float(i[1]) for i in product_profit]
+
+
+    days = [ str(i[0]) for i in daily_sales ]
+    sales_day = [ float(i[1]) for i in daily_sales ]
+    profit_day = [ float(i[1]) for i in daily_profit ]
+    
+    return render_template('dashboard.html',
+        product_names = product_names ,sales_p = sales_p, profit_p = profit_p,
+        days= days, sales_day = sales_day, profit_day = profit_day                 
+                           )
+
 
 
 @app.route('/login', methods=['GET', 'POST'])
@@ -76,10 +90,24 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        # TODO: check the user against your database here
-        session['user'] = email
-        return redirect(url_for('dashboard'))
+
+        existing_user = check_user_exists(email) 
+
+        if not existing_user:
+            flash("User with this email doesn't exist,register instead",'danger')
+            return redirect(url_for('register'))
+        else:
+            check_password = bcrypt.check_password_hash(existing_user[-1],password)
+            if check_password:
+                flash("Logged in successfully",'success')
+                redirect(url_for('dashboard'))
+            else:
+                flash("Incorrect password ,try again",'danger')
+                return redirect(url_for('login'))
+
+
     return render_template('login.html')
+
 
 
 @app.route('/logout')
@@ -90,13 +118,28 @@ def logout():
 
 @app.route('/register', methods=['GET', 'POST'])
 def register():
-    if request.method == 'POST':
-        name = request.form['name']
+      if request.method == "POST":
+
+        full_name = request.form['name']
         email = request.form['email']
+        phone = request.form['phone']
         password = request.form['password']
-        # TODO: save the new user to your database here (hash the password!)
-        return redirect(url_for('login'))
-    return render_template('register.html')
+
+        existing_user = check_user_exists(email)
+
+        if existing_user :
+            flash("User already exists,login instead",'danger')
+            return redirect(url_for('login'))
+        else:
+            hashed_password = bcrypt.generate_password_hash(password).decode('utf-8')
+            new_user = (full_name,email,phone,hashed_password)
+            insert_user(new_user)
+            flash("User registered succesfully",'success')
+            return redirect(url_for('login'))
+
+      return render_template('register.html')
+
+
 
 
 # starts server to run app

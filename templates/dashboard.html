@@ -1,15 +1,85 @@
 {% extends 'base.html' %}
-
-{% block title %}Homepage {% endblock %}
+{% block title %}Dashboard Page {% endblock %}
 {% block content %}
-
 <div>
+
     <p>My dashboard page</p>
-    <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Nostrum maxime dolor et neque ipsum minus dolorum
-        tempora ullam excepturi, voluptatum blanditiis omnis perspiciatis adipisci possimus sed doloribus rerum
-        consequatur obcaecati!</p>
+
+
+    <div>
+        <canvas id="line-chart" width="800" height="450"></canvas>
+    </div>
+
+
+    <div>
+        <canvas id="bar-chart-grouped" width="800" height="450"></canvas>
+    </div>
+
 
 
 
 </div>
+<script>
+    //line chart
+    new Chart(document.getElementById("line-chart"), {
+        type: 'line',
+        data: {
+            labels: {{ days | safe }},
+        datasets: [{
+            data: {{ sales_day | safe }},
+        label: "Sales(Ksh.)",
+        borderColor: "#3e95cd",
+        fill: false
+         }, {
+            data: {{ profit_day | safe }},
+        label: "Profit(Ksh.)",
+        borderColor: "#8e5ea2",
+        fill: false
+         },
+    ]
+      },
+        options: {
+        title: {
+            display: true,
+            text: 'Sales and Profit per Day(Ksh)'
+        }
+    }
+   });
+
+
+
+    //bar chart
+    new Chart(document.getElementById("bar-chart-grouped"), {
+        type: 'bar',
+        data: {
+            labels: {{ product_names | safe }},
+        datasets: [
+        {
+            label: "Sales(ksh)",
+            backgroundColor: "#3e95cd",
+            data: {{ sales_p | safe }}
+        }, {
+            label: "Profit(Ksh)",
+            backgroundColor: "#8e5ea2",
+            data: {{ profit_p | safe }}
+        }
+    ]
+    },
+        options: {
+        title: {
+            display: true,
+            text: 'Sales and Profit per product(Ksh.)'
+        }
+    }
+});
+
+
+
+
+
+
+
+
+
+</script>
 {% endblock %}

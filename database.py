@@ -96,3 +96,22 @@ def get_profit_per_day():
     )
     profit_per_day = cur.fetchall()
     return profit_per_day
+
+def check_user_exists(email):
+    cur.execute('select * from user where users.email = %s',(email,))
+    user = cur.fetchone()
+    return user
+
+
+
+
+
+
+
+
+
+
+
+def insert_user(user_details):
+    cur.execute("insert into users(full_name,email,phone_number,password)values(%s,%s,%s,%s)",user_details)
+    conn.commit()
